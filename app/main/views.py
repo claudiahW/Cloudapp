@@ -1,10 +1,10 @@
 from flask import render_template,request,redirect,url_for,abort
 from . import main
-from .forms import UpdateProfile
+from .forms import UpdateProfile 
 from .. import db
 from ..requests import get_quotes
 from flask_login import login_required
-from ..models import  BlogPost, User
+from ..models import  BlogPost, User 
 # Views
 @main.route('/',methods = ["GET"])
 def  index():
@@ -20,6 +20,7 @@ def profile(uname):
     if user is None:
         abort(404)
     return render_template("profile/profile.html", user = user)
+
 @main.route('/user/<uname>/update',methods = ['GET','POST'])
 @login_required
 def update_profile(uname):
@@ -33,6 +34,7 @@ def update_profile(uname):
         db.session.commit()
         return redirect(url_for('main.update_profile',uname=user.username))
     return render_template('profile/update.html',form =form)  
+
 @main.route('/post', methods=['GET', 'POST'])
 def posts():
     if request.method == 'POST':
@@ -46,12 +48,14 @@ def posts():
     else:
         all_posts = BlogPost.query.order_by(BlogPost.date_posted).all()
         return render_template('post.html', posts=all_posts)
+
 @main.route('/post/delete/<int:id>')
 def delete(id):
     post = BlogPost.query.get_or_404(id)
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for('main.posts'))
+
 @main.route('/post/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     post = BlogPost.query.get_or_404(id)
